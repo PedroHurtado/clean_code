@@ -1,0 +1,8 @@
+En el mundo de las aves hay pinguinos que pesan 5 kg y aguilas que pesan 10 kg y vuelan a 100 km/hora
+
+1. Representar todas las clases necesarias
+2. Crear una función capaz de imprimir todas las aves
+3. Crear una función capaz de imprimir solo las aves voladoras
+4. Crear una funcion capas de imprimir solo las aves no voladoras
+
+5. Agregar paloma al sistema que pesa 1.5 kg y vuela a 30 km/hora
