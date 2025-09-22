@@ -12,11 +12,11 @@ const OPERATIONS = Object.freeze({
 
 function calculateBasicOperation(firstOperand, secondOperand, operation) {
 
-    const operation = OPERATIONS[operation]
+    const operationFunction = OPERATIONS[operation]
     if (!operation) {
         throw new Error(`Unknown operation: ${operation}`);
     }
-    return operation(firstOperand, secondOperand)
+    return operationFunction(firstOperand, secondOperand)
 }
 
 //OPERATIONS.ADD = null ERROR
