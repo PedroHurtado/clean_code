@@ -1,245 +1,516 @@
-# 📚 Tema 4: Funciones - Teoría
-## 4.1. Nombrado y Argumentos
+# Tema 4: Funciones
 
-### ¿Por qué son importantes las funciones?
+> *"The first rule of functions is that they should be small. The second rule of functions is that they should be smaller than that."* - Robert C. Martin
 
-Las funciones son los **bloques de construcción fundamentales** de cualquier aplicación. Una función bien diseñada:
-- **Comunica su propósito** claramente
-- **Encapsula una responsabilidad** específica
-- **Es fácil de testear** y mantener
-- **Reduce la duplicación** de código
+## 4.1 Nombrado y argumentos
 
-> 📚 **Referencia**: Martin, R. C. (2009). *Clean Code: A Handbook of Agile Software Craftsmanship*. Capítulo 3: Functions.
+### Concepto clave
+Las funciones son los bloques de construcción fundamentales del software. Un buen nombre de función debe expresar claramente **qué hace**, no **cómo lo hace**. Los argumentos deben tener un propósito claro y estar ordenados de manera lógica.
 
----
+### Principios del nombrado de funciones:
+1. **Usa verbos**: Las funciones hacen algo
+2. **Sé específico**: Evita nombres genéricos
+3. **Expresa la intención**: El nombre debe explicar el propósito
+4. **Mantén consistencia**: Usa el mismo vocabulario en todo el proyecto
 
-### 🎯 Nombrado de Funciones
-
-#### Principios básicos
-
-**1. Usa verbos que expresen acción**
+### Ejemplo MALO ❌
 ```javascript
-// ❌ Malo - No está claro qué hace
-function user(data) { ... }
-function email(recipient) { ... }
-
-// ✅ Bueno - Acción clara
-function createUser(userData) { ... }
-function sendEmail(recipient) { ... }
-```
-
-**2. Sé específico sobre lo que hace**
-```javascript
-// ❌ Malo - Demasiado genérico
-function process(data) { ... }
-function handle(input) { ... }
-
-// ✅ Bueno - Específico y claro
-function validateUserEmail(email) { ... }
-function calculateMonthlyPayment(principal, rate, months) { ... }
-```
-
-**3. Evita abreviaciones innecesarias**
-```javascript
-// ❌ Malo - Abreviaciones confusas
-function calcTotAmt(items) { ... }
-function procUsrData(usr) { ... }
-
-// ✅ Bueno - Nombres completos y claros
-function calculateTotalAmount(items) { ... }
-function processUserData(user) { ... }
-```
-
-#### Patrones de nombrado comunes
-
-**Funciones de validación**
-```javascript
-function isValidEmail(email) { ... }
-function hasPermission(user, action) { ... }
-function canAccessResource(user, resource) { ... }
-```
-
-**Funciones de transformación**
-```javascript
-function formatCurrency(amount) { ... }
-function parseUserInput(input) { ... }
-function normalizePhoneNumber(phone) { ... }
-```
-
-**Funciones de consulta**
-```javascript
-function getUserById(id) { ... }
-function findActiveUsers() { ... }
-function countCompletedTasks(tasks) { ... }
-```
-
----
-
-### 🔧 Argumentos de Funciones
-
-#### Número de argumentos
-
-**Regla de oro: Menos es más**
-
-```javascript
-// ❌ Malo - Demasiados argumentos
-function createUser(name, email, age, address, phone, country, city, postalCode) {
-    // Es difícil recordar el orden y propósito de cada argumento
-}
-
-// ✅ Mejor - Objeto de configuración
-function createUser(userConfig) {
-    const { name, email, age, address, phone, country, city, postalCode } = userConfig;
-    // Más legible y mantenible
-}
-
-// ✅ Aún mejor - Objeto con propiedades obligatorias separadas
-function createUser(name, email, additionalData = {}) {
-    // Los argumentos esenciales están explícitos
-    // Los opcionales están agrupados
-}
-```
-
-#### Orden de argumentos
-
-**Principios para ordenar argumentos:**
-
-1. **Argumentos obligatorios primero**
-2. **Argumentos opcionales al final**
-3. **Argumentos más importantes primero**
-
-```javascript
-// ✅ Bueno - Orden lógico
-function sendNotification(userId, message, options = {}) {
-    // userId y message son obligatorios
-    // options es opcional
-}
-
-// ❌ Malo - Orden confuso
-function sendNotification(options, userId, message) {
-    // El argumento opcional va primero, esto es confuso
-}
-```
-
-#### Valores por defecto
-
-**Usa valores por defecto para argumentos opcionales**
-
-```javascript
-// ❌ Malo - Validaciones manuales
-function createConnection(host, port, timeout) {
-    host = host || 'localhost';
-    port = port || 3000;
-    timeout = timeout || 5000;
-    // ...
-}
-
-// ✅ Bueno - Valores por defecto
-function createConnection(host = 'localhost', port = 3000, timeout = 5000) {
-    // Más claro y conciso
-}
-```
-
-#### Destructuring en argumentos
-
-**Para objetos con múltiples propiedades**
-
-```javascript
-// ❌ Menos claro
-function updateUserProfile(user) {
-    console.log(`Updating ${user.name} (${user.email})`);
-    // user.name, user.email se repite mucho
-}
-
-// ✅ Más claro con destructuring
-function updateUserProfile({ name, email, age = null }) {
-    console.log(`Updating ${name} (${email})`);
-    // Las propiedades están explícitas en la firma
-}
-```
-
----
-
-### 🚨 Señales de Alerta
-
-#### Nombres problemáticos
-- Funciones que terminan en "Manager", "Handler", "Helper"
-- Nombres genéricos como "process", "handle", "do"
-- Abreviaciones poco claras
-- Nombres que no son verbos
-
-#### Argumentos problemáticos
-- Más de 3-4 argumentos posicionales
-- Argumentos booleanos (flags)
-- Argumentos opcionales en el medio
-- Orden no intuitivo
-
----
-
-### 💡 Ejemplo de Refactoring
-
-**Antes:**
-```javascript
-function calc(a, b, c, d, flag) {
-    if (flag) {
-        return (a + b) * c - d;
+function calc(n1, n2, op) {
+    switch (op) {
+        case 1: return n1 + n2;
+        case 2: return n1 - n2;
+        case 3: return n1 * n2;
+        case 4: return n1 / n2;
     }
-    return (a - b) * c + d;
+}
+
+function process(data) {
+    // ¿Qué tipo de procesamiento?
+    return data.filter(x => x > 0).map(x => x * 2);
+}
+
+function handle(user, type, flag) {
+    // ¿Manejar qué? ¿Para qué sirve flag?
+    if (flag) {
+        return user.status === type;
+    }
+    return false;
 }
 ```
 
-**Después:**
+### Ejemplo BUENO ✅
 ```javascript
-function calculateDiscountedPrice({ originalPrice, discount, taxRate, shippingCost }) {
-    const discountedPrice = originalPrice * (1 - discount);
-    const withTax = discountedPrice * (1 + taxRate);
-    return withTax + shippingCost;
+function calculateBasicOperation(firstOperand, secondOperand, operation) {
+    switch (operation) {
+        case 'add': return firstOperand + secondOperand;
+        case 'subtract': return firstOperand - secondOperand;
+        case 'multiply': return firstOperand * secondOperand;
+        case 'divide': return firstOperand / secondOperand;
+        default: throw new Error(`Unknown operation: ${operation}`);
+    }
 }
 
-function calculatePenalizedPrice({ originalPrice, penalty, taxRate, shippingCost }) {
-    const penalizedPrice = originalPrice * (1 + penalty);
-    const withTax = penalizedPrice * (1 + taxRate);
-    return withTax + shippingCost;
+function extractPositiveAndDouble(numbers) {
+    return numbers
+        .filter(number => number > 0)
+        .map(number => number * 2);
+}
+
+function isUserInStatus(user, expectedStatus) {
+    return user.status === expectedStatus;
+}
+```
+
+### Reglas para argumentos:
+- **Máximo 3-4 argumentos**: Más argumentos indican que la función hace demasiado
+- **Orden lógico**: Los más importantes primero
+- **Evita banderas booleanas**: Mejor dividir en dos funciones
+- **Usa objetos para múltiples parámetros**: Más legible y extensible
+
+### Ejemplo de refactoring de argumentos:
+
+#### MALO ❌
+```javascript
+function createUser(name, email, age, isActive, role, department, startDate) {
+    // Demasiados parámetros, difícil de recordar el orden
+}
+
+function sendEmail(to, subject, body, isUrgent, shouldTrack, template, attachments) {
+    // Imposible de usar sin documentación
+}
+```
+
+#### BUENO ✅
+```javascript
+function createUser(userData) {
+    const {
+        name,
+        email,
+        age,
+        isActive = true,
+        role = 'user',
+        department,
+        startDate = new Date()
+    } = userData;
+    
+    // Lógica de creación...
+}
+
+function sendEmail({ recipient, subject, body, options = {} }) {
+    const {
+        isUrgent = false,
+        shouldTrack = true,
+        template,
+        attachments = []
+    } = options;
+    
+    // Lógica de envío...
+}
+
+// Uso claro y autodocumentado
+createUser({
+    name: 'Juan Pérez',
+    email: 'juan@email.com',
+    age: 30,
+    department: 'Engineering'
+});
+```
+
+## 4.2 Validación y salida temprana
+
+### Concepto clave
+La **validación de entrada** y la **salida temprana** (early return) mejoran la legibilidad y reducen la complejidad ciclomática del código. En lugar de anidar múltiples condiciones, validamos primero los casos inválidos y retornamos inmediatamente.
+
+### Patrón de salida temprana:
+1. **Validar argumentos** al inicio de la función
+2. **Manejar casos edge** primero
+3. **Procesar el caso principal** al final
+
+### Ejemplo MALO ❌
+```javascript
+function processUserOrder(user, order, paymentMethod) {
+    let result;
+    
+    if (user) {
+        if (user.isActive) {
+            if (order) {
+                if (order.items && order.items.length > 0) {
+                    if (paymentMethod) {
+                        if (paymentMethod.isValid) {
+                            // Lógica principal anidada muy profundamente
+                            const total = order.items.reduce((sum, item) => {
+                                return sum + (item.price * item.quantity);
+                            }, 0);
+                            
+                            if (total > 0) {
+                                result = {
+                                    orderId: generateOrderId(),
+                                    total: total,
+                                    status: 'processed'
+                                };
+                            } else {
+                                result = { error: 'Invalid total' };
+                            }
+                        } else {
+                            result = { error: 'Invalid payment method' };
+                        }
+                    } else {
+                        result = { error: 'Payment method required' };
+                    }
+                } else {
+                    result = { error: 'Order must have items' };
+                }
+            } else {
+                result = { error: 'Order required' };
+            }
+        } else {
+            result = { error: 'User is not active' };
+        }
+    } else {
+        result = { error: 'User required' };
+    }
+    
+    return result;
+}
+```
+
+### Ejemplo BUENO ✅
+```javascript
+function processUserOrder(user, order, paymentMethod) {
+    // Validaciones con salida temprana
+    if (!user) {
+        throw new Error('User required');
+    }
+    
+    if (!user.isActive) {
+        throw new Error('User is not active');
+    }
+    
+    if (!order) {
+        throw new Error('Order required');
+    }
+    
+    if (!order.items || order.items.length === 0) {
+        throw new Error('Order must have items');
+    }
+    
+    if (!paymentMethod) {
+        throw new Error('Payment method required');
+    }
+    
+    if (!paymentMethod.isValid) {
+        throw new Error('Invalid payment method');
+    }
+    
+    // Lógica principal clara y sin anidamiento
+    const total = calculateOrderTotal(order.items);
+    
+    if (total <= 0) {
+        throw new Error('Invalid order total');
+    }
+    
+    return {
+        orderId: generateOrderId(),
+        total: total,
+        status: 'processed'
+    };
+}
+
+function calculateOrderTotal(items) {
+    return items.reduce((sum, item) => {
+        return sum + (item.price * item.quantity);
+    }, 0);
+}
+```
+
+### Validación con tipos específicos:
+
+```javascript
+function calculateDiscount(user, purchaseAmount) {
+    // Validación de tipos
+    if (typeof purchaseAmount !== 'number') {
+        throw new TypeError('Purchase amount must be a number');
+    }
+    
+    if (purchaseAmount < 0) {
+        throw new RangeError('Purchase amount cannot be negative');
+    }
+    
+    // Validación de objeto
+    if (!user || typeof user !== 'object') {
+        throw new TypeError('User must be an object');
+    }
+    
+    // Validación de propiedades requeridas
+    if (!user.membershipLevel) {
+        throw new Error('User must have a membership level');
+    }
+    
+    // Caso principal
+    const discountRates = {
+        'bronze': 0.05,
+        'silver': 0.10,
+        'gold': 0.15,
+        'platinum': 0.20
+    };
+    
+    const rate = discountRates[user.membershipLevel] || 0;
+    return purchaseAmount * rate;
+}
+```
+
+## 4.3 Responsabilidad y tamaño
+
+### Concepto clave
+Cada función debe tener **una sola responsabilidad** (Single Responsibility Principle). Una función que hace una sola cosa bien es más fácil de entender, probar y mantener.
+
+**Robert C. Martin** establece que las funciones deben ser **pequeñas**, idealmente no más de 20 líneas, y que deberían hacer **una cosa** bien.
+
+### Indicadores de funciones problemáticas:
+- **Más de 20-30 líneas**
+- **Múltiples niveles de abstracción**
+- **Nombres con "y", "o", "además"**
+- **Múltiples razones para cambiar**
+- **Difícil de nombrar claramente**
+
+### Ejemplo MALO ❌
+```javascript
+function processUserRegistration(userData) {
+    // Validación
+    if (!userData.email) throw new Error('Email required');
+    if (!userData.password) throw new Error('Password required');
+    if (userData.password.length < 8) throw new Error('Password too short');
+    
+    // Formateo de datos
+    userData.email = userData.email.toLowerCase().trim();
+    userData.firstName = userData.firstName.trim();
+    userData.lastName = userData.lastName.trim();
+    
+    // Generación de hash de contraseña
+    const bcrypt = require('bcrypt');
+    const saltRounds = 10;
+    const hashedPassword = bcrypt.hashSync(userData.password, saltRounds);
+    
+    // Verificar si el usuario existe
+    const existingUser = database.findUserByEmail(userData.email);
+    if (existingUser) throw new Error('User already exists');
+    
+    // Crear usuario en base de datos
+    const userId = generateUserId();
+    const user = {
+        id: userId,
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        password: hashedPassword,
+        createdAt: new Date(),
+        isActive: true
+    };
+    
+    database.insertUser(user);
+    
+    // Enviar email de bienvenida
+    const emailTemplate = `
+        <h1>¡Bienvenido ${userData.firstName}!</h1>
+        <p>Tu cuenta ha sido creada exitosamente.</p>
+    `;
+    
+    emailService.send({
+        to: userData.email,
+        subject: 'Bienvenido a nuestra plataforma',
+        html: emailTemplate
+    });
+    
+    // Registrar evento de auditoría
+    auditLog.record({
+        action: 'USER_REGISTRATION',
+        userId: userId,
+        timestamp: new Date(),
+        details: { email: userData.email }
+    });
+    
+    return { success: true, userId: userId };
+}
+```
+
+### Ejemplo BUENO ✅
+```javascript
+function registerUser(userData) {
+    validateRegistrationData(userData);
+    
+    const sanitizedData = sanitizeUserData(userData);
+    
+    if (userExists(sanitizedData.email)) {
+        throw new Error('User already exists');
+    }
+    
+    const user = createUser(sanitizedData);
+    const savedUser = saveUser(user);
+    
+    sendWelcomeEmail(savedUser);
+    recordRegistrationAudit(savedUser);
+    
+    return { success: true, userId: savedUser.id };
+}
+
+function validateRegistrationData(userData) {
+    if (!userData.email) {
+        throw new Error('Email required');
+    }
+    if (!userData.password) {
+        throw new Error('Password required');
+    }
+    if (!isValidPassword(userData.password)) {
+        throw new Error('Password must be at least 8 characters');
+    }
+}
+
+function sanitizeUserData(userData) {
+    return {
+        ...userData,
+        email: userData.email.toLowerCase().trim(),
+        firstName: userData.firstName?.trim(),
+        lastName: userData.lastName?.trim()
+    };
+}
+
+function isValidPassword(password) {
+    return password && password.length >= 8;
+}
+
+function userExists(email) {
+    return database.findUserByEmail(email) !== null;
+}
+
+function createUser(userData) {
+    const hashedPassword = hashPassword(userData.password);
+    
+    return {
+        id: generateUserId(),
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        password: hashedPassword,
+        createdAt: new Date(),
+        isActive: true
+    };
+}
+
+function hashPassword(password) {
+    const bcrypt = require('bcrypt');
+    const saltRounds = 10;
+    return bcrypt.hashSync(password, saltRounds);
+}
+
+function saveUser(user) {
+    return database.insertUser(user);
+}
+
+function sendWelcomeEmail(user) {
+    const template = buildWelcomeEmailTemplate(user);
+    
+    emailService.send({
+        to: user.email,
+        subject: 'Bienvenido a nuestra plataforma',
+        html: template
+    });
+}
+
+function buildWelcomeEmailTemplate(user) {
+    return `
+        <h1>¡Bienvenido ${user.firstName}!</h1>
+        <p>Tu cuenta ha sido creada exitosamente.</p>
+    `;
+}
+
+function recordRegistrationAudit(user) {
+    auditLog.record({
+        action: 'USER_REGISTRATION',
+        userId: user.id,
+        timestamp: new Date(),
+        details: { email: user.email }
+    });
+}
+```
+
+### Beneficios de funciones pequeñas:
+- ✅ **Fáciles de entender**: Una sola responsabilidad
+- ✅ **Fáciles de probar**: Casos de prueba más simples
+- ✅ **Fáciles de reusar**: Funcionalidad específica
+- ✅ **Fáciles de mantener**: Cambios aislados
+- ✅ **Composables**: Se pueden combinar para crear funcionalidad compleja
+
+### La regla del nivel de abstracción:
+Una función debe operar en **un solo nivel de abstracción**. No mezcles operaciones de bajo nivel (manipulación de strings) con operaciones de alto nivel (lógica de negocio).
+
+```javascript
+// MALO: Mezcla niveles de abstracción
+function processOrder(order) {
+    // Alto nivel: validación de negocio
+    if (!isValidOrder(order)) return false;
+    
+    // Bajo nivel: manipulación de strings
+    const customerName = order.customer.firstName.trim().toLowerCase() + 
+                        ' ' + order.customer.lastName.trim().toLowerCase();
+    
+    // Alto nivel: cálculo de negocio
+    const total = calculateTotal(order);
+    
+    return { customerName, total };
+}
+
+// BUENO: Un solo nivel de abstracción
+function processOrder(order) {
+    if (!isValidOrder(order)) return false;
+    
+    const customerName = formatCustomerName(order.customer);
+    const total = calculateTotal(order);
+    
+    return { customerName, total };
+}
+
+function formatCustomerName(customer) {
+    const firstName = customer.firstName.trim().toLowerCase();
+    const lastName = customer.lastName.trim().toLowerCase();
+    return `${firstName} ${lastName}`;
 }
 ```
 
 ---
 
-### 📋 Checklist para Funciones
+## Referencias y lecturas recomendadas
 
-Antes de considerar una función "terminada", pregúntate:
+📚 **Libros fundamentales:**
+- **"Clean Code"** - Robert C. Martin - Capítulo 3: Functions
+- **"Code Complete"** - Steve McConnell - Capítulo 7: High-Quality Routines
+- **"Refactoring"** - Martin Fowler - Extract Method, Replace Parameter with Explicit Methods
+- **"The Pragmatic Programmer"** - Hunt & Thomas - Capítulo sobre funciones ortogonales
 
-- [ ] **¿El nombre explica claramente qué hace la función?**
-- [ ] **¿Puedo entender los argumentos sin mirar la implementación?**
-- [ ] **¿Tiene menos de 4 argumentos posicionales?**
-- [ ] **¿Los argumentos están en un orden lógico?**
-- [ ] **¿Usa valores por defecto apropiados?**
-- [ ] **¿Evita flags booleanos que cambien el comportamiento?**
+🔗 **Recursos online de calidad:**
 
----
+**Artículos técnicos:**
+- [Function Design Principles](https://martinfowler.com/articles/function-size.html) - Martin Fowler sobre el tamaño ideal de funciones
+- [Clean Code JavaScript Functions](https://github.com/ryanmcdermott/clean-code-javascript#functions) - Guía práctica con ejemplos
+- [JavaScript Function Best Practices](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions) - MDN Web Docs
+- [Early Return Pattern](https://szymonkrajewski.pl/why-should-you-return-early/) - Explicación detallada del patrón
 
-### 📖 Referencias y Lecturas Recomendadas
+**Herramientas de análisis:**
+- [ESLint Rules for Functions](https://eslint.org/docs/rules/max-lines-per-function) - Reglas para controlar la complejidad
+- [SonarJS Function Rules](https://rules.sonarsource.com/javascript/tag/function) - Análisis estático de calidad
+- [Cognitive Complexity](https://www.sonarsource.com/docs/CognitiveComplexity.pdf) - Paper sobre complejidad cognitiva
 
-**Libros fundamentales:**
-- **Clean Code** - Robert C. Martin (Capítulo 3: Functions) 📖
-- **The Pragmatic Programmer** - Hunt & Thomas 📖
-- **Code Complete** - Steve McConnell (Capítulo 7: High-Quality Routines) 📖
+**Videos educativos:**
+- [Clean Code - Functions](https://www.youtube.com/watch?v=7EmboKQH8lM) - Uncle Bob Martin explicando principios
+- [JavaScript Functions Best Practices](https://www.youtube.com/watch?v=RR_dQ4sBSBM) - Ejemplos prácticos modernos
 
-**Artículos y guías online:**
-- [JavaScript Function Best Practices](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions) - MDN Web Docs 🌐
-- [Function Parameters in JavaScript](https://javascript.info/function-expressions) - JavaScript.info 🌐
-- [Clean Code JavaScript](https://github.com/ryanmcdermott/clean-code-javascript#functions) - GitHub Guide 🌐
-- [Airbnb JavaScript Style Guide - Functions](https://github.com/airbnb/javascript#functions) 🌐
+**Blogs de expertos:**
+- [Kent C. Dodds - Function Composition](https://kentcdodds.com/blog/function-composition-in-javascript) - Composición de funciones
+- [Eric Elliott - Functional Programming](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0) - Programación funcional
+- [Dan Abramov - The WET Codebase](https://overreacted.io/the-wet-codebase/) - Cuándo no aplicar DRY en funciones
 
-**Videos y recursos:**
-- [Clean Code - Uncle Bob / Lesson 3: Functions](https://www.youtube.com/watch?v=QjVCuSwNUMo) 📺
-- [JavaScript Functions Best Practices](https://www.youtube.com/watch?v=C1PZh_ea-7I) 📺
-
-**Herramientas útiles:**
-- [ESLint Rules para funciones](https://eslint.org/docs/rules/#possible-problems) 🔧
-- [SonarJS Quality Rules](https://rules.sonarsource.com/javascript) 🔧
-- [JSHint Documentation](https://jshint.com/docs/) 🔧
-
----
-
-*"El nombre de una función debe contar una historia completa sobre lo que hace, sin sorpresas."* - Robert C. Martin
+📊 **Conceptos clave:**
+- **Single Responsibility Principle (SRP)** - Cada función debe tener una sola razón para cambiar
+- **Cyclomatic Complexity** - Mide la complejidad de una función basada en el número de caminos de ejecución
+- **Early Return Pattern** - Patrón para reducir anidamiento mediante validaciones tempranas
+- **Function Composition** - Técnica para combinar funciones simples en operaciones complejas
+- **Pure Functions** - Funciones que siempre retornan el mismo resultado para las mismas entradas
